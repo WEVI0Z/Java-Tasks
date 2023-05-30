@@ -1,17 +1,19 @@
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
+import java.util.HashSet;
+
 public class Main {
     public static void main(String[] args) {
-        // Press Alt+Enter with your caret at the highlighted text to see how
-        // IntelliJ IDEA suggests fixing it.
-        System.out.println("Hello and welcome!");
+        HashSet<Number> setOfNumbers = new HashSet<>();
 
-        // Press Shift+F10 or click the green arrow button in the gutter to run the code.
-        for (int i = 1; i <= 5; i++) {
+        setOfNumbers.add(1);
+        setOfNumbers.add(2);
+        setOfNumbers.add(3);
 
-            // Press Shift+F9 to start debugging your code. We have set one breakpoint
-            // for you, but you can always add more by pressing Ctrl+F8.
-            System.out.println("i = " + i);
-        }
+        HashSet<Number> secondSetOfNumbers = new HashSet<>();
+
+        secondSetOfNumbers.add(1);
+        secondSetOfNumbers.add(2);
+        secondSetOfNumbers.add(3);
+
+        System.out.println(setOfNumbers.equals(secondSetOfNumbers));
     }
 }
