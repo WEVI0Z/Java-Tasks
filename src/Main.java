@@ -9,6 +9,8 @@ public class Main {
 
         Collections.addAll(arrayOfStrings, "Alpha", "Zoo", "Beta", "Awz");
 
-        arrayOfStrings.stream().sorted().collect(Collectors.toCollection(LinkedList::new)).descendingIterator().forEachRemaining(System.out::println);
+        arrayOfStrings.stream().sorted().forEach(System.out::println);
+
+        arrayOfStrings.stream().sorted(Collections.reverseOrder()).forEach(System.out::println);
     }
 }
