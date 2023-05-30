@@ -1,17 +1,33 @@
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 public class Main {
     public static void main(String[] args) {
-        // Press Alt+Enter with your caret at the highlighted text to see how
-        // IntelliJ IDEA suggests fixing it.
-        System.out.println("Hello and welcome!");
+        Calendar alexHireDate = new GregorianCalendar(2005, Calendar.JANUARY, 31);
+        Employee alex = new Employee(
+                "Alex",
+                3112,
+                alexHireDate
+        );
 
-        // Press Shift+F10 or click the green arrow button in the gutter to run the code.
-        for (int i = 1; i <= 5; i++) {
+        System.out.println(alex.calcService());
+    }
+}
 
-            // Press Shift+F9 to start debugging your code. We have set one breakpoint
-            // for you, but you can always add more by pressing Ctrl+F8.
-            System.out.println("i = " + i);
-        }
+class Employee {
+    String name;
+    int salary;
+    Calendar hireDate;
+
+    Employee (String name, int salary, Calendar hireDate) {
+        this.name = name;
+        this.salary = salary;
+        this.hireDate = hireDate;
+    }
+
+    int calcService() {
+        Calendar todayDate = new GregorianCalendar();
+
+        return todayDate.get(Calendar.YEAR) - this.hireDate.get(Calendar.YEAR);
     }
 }
