@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main {
     public static void main(String[] args) {
@@ -7,102 +9,122 @@ public class Main {
 }
 
 class Bank {
-    ArrayList<SavingsAccount> savingsAccounts = new ArrayList<SavingsAccount>();
-    ArrayList<CurrentAccount> currentAccounts = new ArrayList<CurrentAccount>();
+    private final ArrayList<SavingsAccount> savingsAccounts = new ArrayList<>();
+    private final ArrayList<CurrentAccount> currentAccounts = new ArrayList<>();
 
-    <T extends Account> void createAccount(ArrayList<T> accounts, T account) {
+    private <T extends Account> void createAccount(ArrayList<T> accounts, T account) {
         accounts.add(account);
     }
 
-    void createSavingsAccount(String ownerName) {
+    public void createSavingsAccount(String ownerName) {
         SavingsAccount account = new SavingsAccount(ownerName);
 
         this.createAccount(this.savingsAccounts, account);
     }
 
-    void createCurrentAccount(String ownerName) {
+    public void createCurrentAccount(String ownerName) {
         CurrentAccount account = new CurrentAccount(ownerName);
 
         this.createAccount(this.currentAccounts, account);
     }
+
+    public List<SavingsAccount> getSavingsAccounts() {
+        return this.savingsAccounts;
+    }
+
+    public List<CurrentAccount> getCurrentAccounts() {
+        return this.currentAccounts;
+    }
 }
 
 interface Account {
-    public void deposit(int number);
-    public void withdraw(int number);
-    public double calculateInterest();
-    public int viewBalance();
+    void deposit(int number);
+    void withdraw(int number);
+    double calculateInterest();
+    int viewBalance();
+    String getOwnerName();
 }
 
 class SavingsAccount implements Account {
-    int balance = 0;
-    int id;
-    static int nextId = 0;
-    String ownerName;
-    double interest = 2.3;
+    private int balance = 0;
+    private final int id;
+    public static AtomicInteger nextId = new AtomicInteger(0);
+    private final String ownerName;
+    private final double interest = 2.3;
 
     SavingsAccount(String ownerName) {
-        id = nextId++;
+        id = SavingsAccount.nextId.getAndIncrement();
         this.ownerName = ownerName;
     }
 
     @Override
+    public String getOwnerName() {
+        return this.ownerName;
+    }
+
+
+    @Override
     public void deposit(int number) {
-        balance += number;
+        this.balance += number;
     }
 
     @Override
     public void withdraw(int number) {
-     balance -= number;
+        this.balance -= number;
     }
 
     @Override
     public double calculateInterest() {
-        return interest;
+        return this.interest;
     }
 
     @Override
     public int viewBalance() {
-        return balance;
+        return this.balance;
     }
 
     public double calculateSavings(int years) {
-        return balance * (years * interest);
+        return this.balance * (years * this.interest);
     }
 }
 class CurrentAccount implements Account {
-    int balance = 0;
-    int id;
-    static int nextId = 0;
-    double interest = 1.2;
-    String ownerName;
+    private int balance = 0;
+    private final int id;
+    public static AtomicInteger nextId = new AtomicInteger(0);
+    private final double interest = 1.2;
+    private final String ownerName;
 
     CurrentAccount(String ownerName) {
-        id = nextId++;
+        id = CurrentAccount.nextId.getAndIncrement();
         this.ownerName = ownerName;
     }
 
     @Override
+    public String getOwnerName() {
+        return this.ownerName;
+    }
+
+    @Override
     public void deposit(int number) {
-        balance += number;
+        this.balance += number;
     }
 
     @Override
     public void withdraw(int number) {
-        balance -= number;
+        this.balance -= number;
     }
 
     @Override
     public double calculateInterest() {
-        return interest * balance;
+        return this.interest * this.balance;
     }
 
     @Override
     public int viewBalance() {
-        return balance;
+        return this.balance;
     }
 
     public double calculateDiscount() {
-        return interest * 1.3;
+        return this.interest * 1.3;
     }
 }
