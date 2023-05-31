@@ -1,17 +1,108 @@
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
+import java.util.ArrayList;
+
 public class Main {
     public static void main(String[] args) {
-        // Press Alt+Enter with your caret at the highlighted text to see how
-        // IntelliJ IDEA suggests fixing it.
-        System.out.println("Hello and welcome!");
 
-        // Press Shift+F10 or click the green arrow button in the gutter to run the code.
-        for (int i = 1; i <= 5; i++) {
+    }
+}
 
-            // Press Shift+F9 to start debugging your code. We have set one breakpoint
-            // for you, but you can always add more by pressing Ctrl+F8.
-            System.out.println("i = " + i);
-        }
+class Bank {
+    ArrayList<SavingsAccount> savingsAccounts = new ArrayList<SavingsAccount>();
+    ArrayList<CurrentAccount> currentAccounts = new ArrayList<CurrentAccount>();
+
+    <T extends Account> void createAccount(ArrayList<T> accounts, T account) {
+        accounts.add(account);
+    }
+
+    void createSavingsAccount(String ownerName) {
+        SavingsAccount account = new SavingsAccount(ownerName);
+
+        this.createAccount(this.savingsAccounts, account);
+    }
+
+    void createCurrentAccount(String ownerName) {
+        CurrentAccount account = new CurrentAccount(ownerName);
+
+        this.createAccount(this.currentAccounts, account);
+    }
+}
+
+interface Account {
+    public void deposit(int number);
+    public void withdraw(int number);
+    public double calculateInterest();
+    public int viewBalance();
+}
+
+class SavingsAccount implements Account {
+    int balance = 0;
+    int id;
+    static int nextId = 0;
+    String ownerName;
+    double interest = 2.3;
+
+    SavingsAccount(String ownerName) {
+        id = nextId++;
+        this.ownerName = ownerName;
+    }
+
+    @Override
+    public void deposit(int number) {
+        balance += number;
+    }
+
+    @Override
+    public void withdraw(int number) {
+     balance -= number;
+    }
+
+    @Override
+    public double calculateInterest() {
+        return interest;
+    }
+
+    @Override
+    public int viewBalance() {
+        return balance;
+    }
+
+    public double calculateSavings(int years) {
+        return balance * (years * interest);
+    }
+}
+class CurrentAccount implements Account {
+    int balance = 0;
+    int id;
+    static int nextId = 0;
+    double interest = 1.2;
+    String ownerName;
+
+    CurrentAccount(String ownerName) {
+        id = nextId++;
+        this.ownerName = ownerName;
+    }
+
+    @Override
+    public void deposit(int number) {
+        balance += number;
+    }
+
+    @Override
+    public void withdraw(int number) {
+        balance -= number;
+    }
+
+    @Override
+    public double calculateInterest() {
+        return interest * balance;
+    }
+
+    @Override
+    public int viewBalance() {
+        return balance;
+    }
+
+    public double calculateDiscount() {
+        return interest * 1.3;
     }
 }
