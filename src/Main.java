@@ -3,7 +3,7 @@ import java.util.HashSet;
 
 public class Main {
     public static void main(String[] args) {
-        HashMap<String, Integer> setOfNumbers = new HashMap<String, Integer>();
+        HashMap<String, Integer> setOfNumbers = new HashMap<>();
 
         setOfNumbers.put("one", 1);
         setOfNumbers.put("two", 2);
