@@ -1,3 +1,4 @@
+import java.util.Collections;
 import java.util.HashSet;
 
 public class Main {
@@ -8,12 +9,22 @@ public class Main {
         setOfNumbers.add(2);
         setOfNumbers.add(3);
 
-        HashSet<Number> secondSetOfNumbers = new HashSet<>();
+        HashSet<Integer> secondSetOfNumbers = new HashSet<>();
 
         secondSetOfNumbers.add(1);
-        secondSetOfNumbers.add(2);
+        secondSetOfNumbers.add(4);
         secondSetOfNumbers.add(3);
 
-        System.out.println(setOfNumbers.equals(secondSetOfNumbers));
+        HashSet<Integer> finalSetOfNumbers = new HashSet<Integer>((HashSet) setOfNumbers.clone());
+
+        secondSetOfNumbers.forEach(number -> {
+            if(!finalSetOfNumbers.contains(number)) {
+                finalSetOfNumbers.add(number);
+            } else {
+                finalSetOfNumbers.remove(number);
+            }
+        });
+
+        finalSetOfNumbers.forEach(System.out::println);
     }
 }
