@@ -13,7 +13,7 @@ public class Main {
         travelAgency.createFlight("BelAvia", 2023, 7, 27);
         travelAgency.createFlight("BelAir", 2024, 1, 12);
 
-        travelAgency.flights.forEach(System.out::println);
+        travelAgency.getFlights().forEach(System.out::println);
 
         List<Flight> foundFlights = travelAgency.searchFlights("e");
 
@@ -24,7 +24,7 @@ public class Main {
 
         travelAgency.removeFlightById(0);
 
-        travelAgency.reservedFlights.forEach(flight -> System.out.println(flight.getName()));
+        travelAgency.getReservedFlights().forEach(flight -> System.out.println(flight.getName()));
     }
 }
 
@@ -35,10 +35,26 @@ interface BookingObject {
 }
 
 class TravelAgency {
-    public ArrayList<Flight> flights = new ArrayList<>();
-    public ArrayList<Flight> reservedFlights = new ArrayList<>();
-    public ArrayList<Hotel> hotels = new ArrayList<>();
-    public ArrayList<Hotel> reservedHotels = new ArrayList<>();
+    private final ArrayList<Flight> flights = new ArrayList<>();
+    private final ArrayList<Flight> reservedFlights = new ArrayList<>();
+    private final ArrayList<Hotel> hotels = new ArrayList<>();
+    private final ArrayList<Hotel> reservedHotels = new ArrayList<>();
+
+    public List<Flight> getFlights() {
+        return this.flights;
+    }
+
+    public List<Flight> getReservedFlights() {
+        return this.reservedFlights;
+    }
+
+    public List<Hotel> getHotels() {
+        return this.hotels;
+    }
+
+    public List<Hotel> getReservedHotels() {
+        return this.reservedHotels;
+    }
 
     private <T extends BookingObject> T findById(List<T> array, int id) {
         return array.stream().filter(item -> item.getId() == id).findFirst().get();
