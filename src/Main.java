@@ -1,71 +1,75 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) {
         TravelAgency travelAgency = new TravelAgency();
 
-        travelAgency.createFlight("BelAvia", 2023, Calendar.JULY, 27);
-        travelAgency.createFlight("BelAir", 2024, Calendar.JANUARY, 12);
+        travelAgency.createFlight("BelAvia", 2023, 7, 27);
+        travelAgency.createFlight("BelAir", 2024, 1, 12);
 
         travelAgency.flights.forEach(System.out::println);
 
         List<Flight> foundFlights = travelAgency.searchFlights("e");
 
-        foundFlights.forEach(flight -> System.out.printf("Flight #%d called %s goes %s \n", flight.id, flight.name, flight.flightDate.getTime()));
+        foundFlights.forEach(flight -> System.out.printf("Flight #%d called %s goes %s \n", flight.getId(), flight.getName(), flight.getDate()));
 
         travelAgency.bookFlightById(0);
         travelAgency.bookFlightById(1);
 
         travelAgency.removeFlightById(0);
 
-        travelAgency.reservedFlights.forEach(flight -> System.out.println(flight.name));
+        travelAgency.reservedFlights.forEach(flight -> System.out.println(flight.getName()));
     }
 }
 
 interface BookingObject {
     String getName();
+    int getId();
+    LocalDate getDate();
 }
 
 class TravelAgency {
-    ArrayList<Flight> flights = new ArrayList<Flight>();
-    ArrayList<Flight> reservedFlights = new ArrayList<Flight>();
-    ArrayList<Hotel> hotels = new ArrayList<Hotel>();
-    ArrayList<Hotel> reservedHotels = new ArrayList<Hotel>();
+    public ArrayList<Flight> flights = new ArrayList<>();
+    public ArrayList<Flight> reservedFlights = new ArrayList<>();
+    public ArrayList<Hotel> hotels = new ArrayList<>();
+    public ArrayList<Hotel> reservedHotels = new ArrayList<>();
 
-    <T> T findById(ArrayList<T> array, int id) {
-        return array.get(id);
+    private <T extends BookingObject> T findById(List<T> array, int id) {
+        return array.stream().filter(item -> item.getId() == id).findFirst().get();
     }
 
-    <T extends BookingObject> List<T> search(ArrayList<T> array, String keyWord) {
+    private <T extends BookingObject> List<T> search(List<T> array, String keyWord) {
         return array.stream().
                 filter(item -> item.getName().toLowerCase().contains(keyWord.toLowerCase())).
                 toList();
     }
 
-    void createFlight(
+    public void createFlight(
             String flightName,
             int flightYear,
             int flightMonth,
             int flightDay
     ) {
-        Calendar date = new GregorianCalendar(flightYear, flightMonth, flightDay);
+        LocalDate date = LocalDate.of(flightYear, flightMonth, flightDay);
 
         flights.add(new Flight(flightName, date));
     }
 
-    List<Flight> searchFlights(String keyWord) {
+    public List<Flight> searchFlights(String keyWord) {
         return this.search(this.flights, keyWord);
     }
 
-    Flight findFlightById(int id) {
+    public Flight findFlightById(int id) {
         return findById(this.flights, id);
     }
 
-    void bookFlightById(int id) {
+    public void bookFlightById(int id) {
         Flight targetFlight = this.findFlightById(id);
 
         if (!this.reservedFlights.contains(targetFlight)) {
@@ -73,21 +77,21 @@ class TravelAgency {
         }
     }
 
-    void removeFlightById(int id) {
+    public void removeFlightById(int id) {
         Flight targetFlight = this.findFlightById(id);
 
-        this.reservedFlights.removeIf(flights -> flights.name.equals(targetFlight.name));
+        this.reservedFlights.removeIf(flights -> flights.getName().equals(targetFlight.getName()));
     }
 
-    List<Hotel> searchHotels(String keyWord) {
+    public List<Hotel> searchHotels(String keyWord) {
         return this.search(this.hotels, keyWord);
     }
 
-    Hotel findHotelById(int id) {
+    public Hotel findHotelById(int id) {
         return this.findById(this.hotels, id);
     }
 
-    void bookHotelById(int id) {
+    public void bookHotelById(int id) {
         Hotel targetHotel = this.findById(this.hotels, id);
 
         if (!this.reservedHotels.contains(targetHotel)) {
@@ -95,49 +99,65 @@ class TravelAgency {
         }
     }
 
-    void removeHotelById(int id) {
+    public void removeHotelById(int id) {
         Hotel targetHotel = this.findById(this.hotels, id);
 
-        this.reservedHotels.removeIf(hotel -> hotel.name.equals(targetHotel.name));
+        this.reservedHotels.removeIf(hotel -> hotel.getName().equals(targetHotel.getName()));
     }
 }
 
 class Flight implements BookingObject {
-    String name;
-    int id;
-    static int nextId = 0;
-    Calendar flightDate;
+    private final String name;
+    private final int id;
+    private final static AtomicInteger nextId = new AtomicInteger(0);
+    private final LocalDate bookingDate;
+
+    public Flight(
+            String name,
+            LocalDate bookingDate
+    ) {
+        this.id = Flight.nextId.getAndIncrement();
+        this.name = name;
+        this.bookingDate = bookingDate;
+    }
 
     public String getName() {
         return this.name;
     }
 
-    Flight(
-            String name,
-            Calendar flightDate
-    ) {
-        this.name = name;
-        this.id = Flight.nextId++;
-        this.flightDate = flightDate;
+    public int getId() {
+        return this.id;
+    }
+
+    public LocalDate getDate() {
+        return this.bookingDate;
     }
 }
 
 class Hotel implements BookingObject {
-    String name;
-    int id;
-    static int nextId = 0;
-    Calendar bookingDate;
+    private final String name;
+    private final int id;
+    private final static AtomicInteger nextId = new AtomicInteger(0);
+    private final LocalDate bookingDate;
 
-    public String getName() {
-        return name;
-    }
-
-    Hotel(
+    public Hotel(
             String name,
-            Calendar bookingDate
+            LocalDate bookingDate
     ) {
-        this.id = Hotel.nextId++;
+        this.id = Hotel.nextId.getAndIncrement();
         this.name = name;
         this.bookingDate = bookingDate;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public LocalDate getDate() {
+        return this.bookingDate;
     }
 }
