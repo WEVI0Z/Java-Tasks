@@ -1,15 +1,17 @@
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class Main {
     public static void main(String[] args) {
-        HashSet<Integer> setOfNumbers = new HashSet<Integer>();
+        HashMap<String, Integer> setOfNumbers = new HashMap<String, Integer>();
 
-        setOfNumbers.add(1);
-        setOfNumbers.add(2);
-        setOfNumbers.add(3);
+        setOfNumbers.put("one", 1);
+        setOfNumbers.put("two", 2);
+        setOfNumbers.put("three", 3);
 
-        HashSet<Integer> secondSetOfNumbers = new HashSet<Integer>((HashSet)setOfNumbers.clone());
+        HashMap<String, Integer> secondSetOfNumbers = new HashMap<String, Integer>((HashMap)setOfNumbers.clone());
 
-        secondSetOfNumbers.forEach(System.out::println);
+        secondSetOfNumbers.keySet().forEach(System.out::println);
+        secondSetOfNumbers.values().forEach(System.out::println);
     }
 }
