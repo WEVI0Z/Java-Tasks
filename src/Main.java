@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 public class Main {
     public static void main(String[] args) {
@@ -9,8 +8,16 @@ public class Main {
 
         Collections.addAll(arrayOfNumbers, 3, 4, 2, 6, 1, 9, 8);
 
-        List<Integer> numbers = arrayOfNumbers.stream().sorted().toList();
+        int firstNumber = arrayOfNumbers.stream().
+                sorted().
+                skip(1).
+                findFirst().get();
 
-        System.out.printf("Second smallest: %d; Second biggest: %d", numbers.get(1),  numbers.get(numbers.size() - 2));
+        int secondNumber = arrayOfNumbers.stream().
+                sorted(Collections.reverseOrder()).
+                skip(1).
+                findFirst().get();
+
+        System.out.printf("Second smallest: %d; Second biggest: %d", firstNumber,  secondNumber);
     }
 }
